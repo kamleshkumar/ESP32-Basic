@@ -10,6 +10,21 @@
 
 ![image](https://github.com/user-attachments/assets/9a707444-0985-4bda-bd50-25627ef880dc)
 
+**Specification:**
+Operating voltage : DC 5V
+Total current work : 40mA
+Acoustic emission frequency : 40khz
+Farthest range : 6m
+Blind : 25cm
+Wiring: + 5V (positive power supply)
+Trig (control side) RX
+Echo (the receiver) TX
+GND(negative)
+Resolution : about 0.5cm
+Angle : 70 degrees
+Working temperature : -10 ~ 70 ℃
+Storage temperature : -20 ~ 80 ℃
+
 ![image](https://github.com/user-attachments/assets/9a07e615-0f68-4732-bdc1-9bfc9eab1f1c)
 
 ![image](https://github.com/user-attachments/assets/de4c36cc-2e0c-4f5e-9fe5-5d72e49ed31e)
