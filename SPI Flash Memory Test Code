@@ -1,0 +1,136 @@
+#include <SPI.h>
+#include <ArduinoJson.h>
+//reference -> https://mischianti.org/esp32-and-esp8266-fat-filesystem-on-external-spi-flash-memory/
+//modified --> https://chatgpt.com/c/67966208-5794-800f-be4c-64e97e9a7f0d
+
+#define FLASH_CS_PIN 5 // Chip Select pin for Flash memory
+
+// Flash memory commands
+#define CMD_READ 0x03
+#define CMD_WRITE_ENABLE 0x06
+#define CMD_PAGE_PROGRAM 0x02
+#define CMD_SECTOR_ERASE 0x20
+#define CMD_READ_STATUS 0x05
+
+void sendCommand(byte cmd) {
+  digitalWrite(FLASH_CS_PIN, LOW);
+  SPI.transfer(cmd);
+}
+
+void writeEnable() {
+  sendCommand(CMD_WRITE_ENABLE);
+  digitalWrite(FLASH_CS_PIN, HIGH);
+}
+
+bool isFlashBusy() {
+    digitalWrite(FLASH_CS_PIN, LOW);
+    SPI.transfer(CMD_READ_STATUS);
+    byte status = SPI.transfer(0x00);
+    digitalWrite(FLASH_CS_PIN, HIGH);
+
+    Serial.print("Flash status: 0x");
+    Serial.println(status, HEX);
+    return status & 0x01; // Check the busy bit
+}
+
+
+void waitForFlash() {
+    uint32_t start = millis();
+    while (isFlashBusy()) {
+        if (millis() - start > 5000) { // Timeout after 5 seconds
+            Serial.println("Flash write timeout!");
+            return;
+        }
+    }
+    Serial.println("Flash is ready.");
+}
+
+
+void eraseSector(uint32_t address) {
+  writeEnable();
+  digitalWrite(FLASH_CS_PIN, LOW);
+  SPI.transfer(CMD_SECTOR_ERASE);
+  SPI.transfer((address >> 16) & 0xFF);
+  SPI.transfer((address >> 8) & 0xFF);
+  SPI.transfer(address & 0xFF);
+  digitalWrite(FLASH_CS_PIN, HIGH);
+  Serial.println("Sector erased.");
+  waitForFlash();
+}
+
+void writePage(uint32_t address, const char* data, size_t length) {
+    writeEnable(); // Enable writing
+    Serial.println("Write enabled.");
+
+    digitalWrite(FLASH_CS_PIN, LOW);
+    SPI.transfer(CMD_PAGE_PROGRAM);
+    SPI.transfer((address >> 16) & 0xFF); // Address high byte
+    SPI.transfer((address >> 8) & 0xFF);  // Address mid byte
+    SPI.transfer(address & 0xFF);         // Address low byte
+
+    Serial.println("Writing bytes...");
+    for (size_t i = 0; i < length; i++) {
+        SPI.transfer(data[i]);
+        Serial.print("Byte written: ");
+        Serial.println(data[i], HEX);
+    }
+    digitalWrite(FLASH_CS_PIN, HIGH);
+    Serial.println("Page written. Waiting for completion...");
+
+    waitForFlash(); // Wait for the flash to complete writing
+    Serial.println("Write operation completed.");
+}
+
+void readData(uint32_t address, char* buffer, size_t length) {
+  digitalWrite(FLASH_CS_PIN, LOW);
+  SPI.transfer(CMD_READ);
+  SPI.transfer((address >> 16) & 0xFF);
+  SPI.transfer((address >> 8) & 0xFF);
+  SPI.transfer(address & 0xFF);
+
+  for (size_t i = 0; i < length; i++) {
+    buffer[i] = SPI.transfer(0xFF);
+  }
+  digitalWrite(FLASH_CS_PIN, HIGH);
+}
+
+void setup() {
+    Serial.begin(115200);
+    while (!Serial);
+
+    SPI.begin(18, 19, 23, FLASH_CS_PIN);
+    pinMode(FLASH_CS_PIN, OUTPUT);
+    digitalWrite(FLASH_CS_PIN, HIGH);
+
+    Serial.println("Reading Flash ID...");
+    digitalWrite(FLASH_CS_PIN, LOW);
+    SPI.transfer(0x9F);
+    byte manufacturerID = SPI.transfer(0x00);
+    byte deviceID1 = SPI.transfer(0x00);
+    byte deviceID2 = SPI.transfer(0x00);
+    digitalWrite(FLASH_CS_PIN, HIGH);
+
+    Serial.print("Manufacturer ID: 0x");
+    Serial.println(manufacturerID, HEX);
+    Serial.print("Device ID: 0x");
+    Serial.print(deviceID1, HEX);
+    Serial.println(deviceID2, HEX);
+
+    uint32_t address = 0x0000;
+    const char* testData = "Test Write Data";
+    Serial.println("Erasing sector...");
+    eraseSector(address);
+
+    Serial.println("Writing test data...");
+    writePage(address, testData, strlen(testData));
+
+    char readBuffer[256] = {0};
+    Serial.println("Reading back data...");
+    readData(address, readBuffer, strlen(testData));
+    Serial.print("Read from Flash: ");
+    Serial.println(readBuffer);
+}
+
+void loop() {}
+
+
