@@ -18,3 +18,7 @@ Manufacturer: 20
 Device: 4017
 Detected flash size: 8MB
 Flash voltage set by a strapping pin to 3.3V
+
+
+
+In general, the metal plate is an important component for both the thermal management and electromagnetic performance of the ESP32 chip, especially in complex, high-performance applications.
