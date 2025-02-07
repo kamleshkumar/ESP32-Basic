@@ -20,5 +20,5 @@ Detected flash size: 8MB
 Flash voltage set by a strapping pin to 3.3V
 
 
-
+The metal plate on the ESP32 chip (or similar chips like ESP8266) is known as the heat spreader or thermal pad.
 In general, the metal plate is an important component for both the thermal management and electromagnetic performance of the ESP32 chip, especially in complex, high-performance applications.
