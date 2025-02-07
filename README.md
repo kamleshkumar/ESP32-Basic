@@ -32,3 +32,6 @@ Storage temperature : -20 ~ 80 ℃
 
 ![image](https://github.com/user-attachments/assets/75bd1c18-f30d-4dba-9bc7-5ebd179667fe)
 
+esp32 D 8MB internal upload settging on arduino IDE..............
+
+![esp32 D](https://github.com/user-attachments/assets/2976267d-9b9b-4415-b105-d9e7b6359189)
