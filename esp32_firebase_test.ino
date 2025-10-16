@@ -9,9 +9,9 @@ const char* password = "home2121";
 // Firebase configuration
 #define FIREBASE_PROJECT_ID "kkmsgapp"
 #define FIREBASE_DATABASE_URL "https://kkmsgapp.firebaseio.com"
-#define API_KEY "AIzaSyANzGeVd0d6TWP_Vpti1aLu_PTh_xRLyp0"
-#define USER_EMAIL "esp32@kkmsgapp.com"
-#define USER_PASSWORD "esp32password123"
+#define API_KEY "AIzaSyANzGExtGeVd0d6TWP_Vpti1aLu_PTh_xRLyp0"
+#define USER_EMAIL "esp43434Brt@kkmsgapp.com"
+#define USER_PASSWORD "esp32232fdd123"
 
 // Firebase objects - CORRECT SYNTAX (NO getNetwork!)
 UserAuth user_auth(API_KEY, USER_EMAIL, USER_PASSWORD, 3000);
@@ -236,4 +236,5 @@ void updateDeviceStatus(String deviceName, int gpioPin, String action) {
   
   Serial.println("✅ Status updated: " + statusJson);
 }
+
 
