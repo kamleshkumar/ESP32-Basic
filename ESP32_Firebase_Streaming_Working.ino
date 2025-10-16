@@ -14,15 +14,16 @@
 #include <FirebaseClient.h>
 
 // WiFi Settings
-const char* WIFI_SSID = "Dhruvm05";
-const char* WIFI_PASSWORD = "ispMob#29";
+const char* ssid = "Sweet1212";
+const char* password = "home2121";
 
-// Firebase Settings - Same as your working code
+// Firebase configuration
 #define FIREBASE_PROJECT_ID "kkmsgapp"
 #define FIREBASE_DATABASE_URL "https://kkmsgapp.firebaseio.com"
-#define API_KEY "AIzaSyANzGeVd0d6TWP_Vpti1aLu_PTh_xRLyp0"
-#define USER_EMAIL "esp32@kkmsgapp.com"
-#define USER_PASSWORD "esp32password123"
+#define API_KEY "AIzaSyANzGExtGeVd0d6TWP_Vpti1aLu_PTh_xRLyp0"
+#define USER_EMAIL "esp43434Brt@kkmsgapp.com"
+#define USER_PASSWORD "esp32232fdd123"
+
 
 // Firebase objects - Same as your working code
 UserAuth user_auth(API_KEY, USER_EMAIL, USER_PASSWORD, 3000);
