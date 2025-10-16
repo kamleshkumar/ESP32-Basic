@@ -1,0 +1,23 @@
+class MyCallbacks: public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic *pCharacteristic) {
+    
+    // 1. Get the C++ string value, but AVOID storing it in an intermediate std::string variable.
+    //    Use the temporary object returned by getValue() and immediately get its C-string pointer.
+    //    We explicitly use the Arduino String constructor for safety.
+    
+    // ⚠️ CRASH AVOIDED: We use String(pCharacteristic->getValue().c_str())
+    // This fetches the value, finds the C-string pointer, and constructs the final Arduino String 
+    // with minimal intermediate memory copies, which helps prevent crashes.
+    String rxValue = String(pCharacteristic->getValue().c_str()); 
+
+    // Note: The conversion error from the original code (String rxValue = pCharacteristic->getValue();)
+    // is fixed by explicitly using .c_str() which provides the necessary char* pointer.
+    
+    if (rxValue.length() > 0) {
+      Serial.print("📩 Received: ");
+      Serial.println(rxValue);
+      // Now use rxValue safely
+      receivedData = rxValue; 
+    }
+  }
+};
