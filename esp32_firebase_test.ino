@@ -3,8 +3,8 @@
 #include <ArduinoJson.h>
 
 // WiFi credentials
-const char* ssid = "Sweet Home";
-const char* password = "sweetHome74B";
+const char* ssid = "Sweet1212";
+const char* password = "home2121";
 
 // Firebase configuration
 #define FIREBASE_PROJECT_ID "kkmsgapp"
@@ -236,3 +236,4 @@ void updateDeviceStatus(String deviceName, int gpioPin, String action) {
   
   Serial.println("✅ Status updated: " + statusJson);
 }
+
