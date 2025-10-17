@@ -1,3 +1,4 @@
+#include <Arduino.h>
 /***
  * LED Blinking
  * ESP32 onboard LED Blink test
