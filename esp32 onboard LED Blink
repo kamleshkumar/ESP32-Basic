@@ -1,15 +1,25 @@
-    #include "Arduino.h"
-
-#define LED 2
+/***
+ * LED Blinking
+ * ESP32 onboard LED Blink test
+ */
+#include <Arduino.h>
+const int ledPin = 2;
 
 void setup() {
-  // Set pin mode
-  pinMode(LED,OUTPUT);
+  Serial.begin(115200);  // ← THIS WAS MISSING!
+  
+  // setup pin 2 as a digital output pin (ESP32 onboard LED)
+  pinMode(ledPin, OUTPUT);
+  
+  Serial.println("🚀 LED Blink Test Started");
 }
 
 void loop() {
-  delay(500);
-  digitalWrite(LED,HIGH);
-  delay(500);
-  digitalWrite(LED,LOW);
+  digitalWrite(ledPin, HIGH);  // turn on the LED
+  Serial.println("💡 HIGH");   // Added println for new lines
+  delay(500);                  // wait for half a second
+  
+  digitalWrite(ledPin, LOW);   // turn off the LED
+  Serial.println("🔌 LOW");    // Added println for new lines
+  delay(500);                  // wait for half a second
 }
