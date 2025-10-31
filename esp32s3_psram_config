@@ -1,1 +1,67 @@
+[env:esp32s3]
+platform = espressif32
+board = esp32-s3-devkitc-1
+framework = arduino
+
+upload_speed = 921600
+monitor_speed = 115200
+upload_protocol = esptool
+
+board_build.flash_mode = qio
+board_build.flash_freq = 80m
+board_build.flash_size = 16MB
+board_build.psram = enabled
+board_build.arduino.memory_type = qio_opi
+board_build.psram_type = octal
+board_build.psram_size = 8MB
+
+build_flags =
+    -DBOARD_HAS_PSRAM
+    -mfix-esp32-psram-cache-issue
+
+
+Example code:
+
+#include <Arduino.h>
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+  Serial.println("\n=== PSRAM Verification ===");
+  Serial.printf("PSRAM found: %s\n", psramFound() ? "YES" : "NO");
+  Serial.printf("PSRAM size: %u bytes (%.1f MB)\n", ESP.getPsramSize(), ESP.getPsramSize()/1048576.0);
+  Serial.printf("Free PSRAM: %u bytes\n", ESP.getFreePsram());
+}
+
+void loop() { delay(10000); }
+
+
+
+ARDUINO IDE
+=========================================================
+For PSRAM, select OPI PSRAM
+For Flash size select 16MB
+For Flash Mode select QIO 80
+
+
+
+CODE:
+===============================
+#include <Arduino.h>
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+}
+
+void loop() {
+  Serial.println("\n=== PSRAM Status ===");
+  if (psramFound()) {
+    Serial.printf("✅ PSRAM detected: %u bytes (%.1f MB)\n", ESP.getPsramSize(), ESP.getPsramSize() / 1048576.0);
+    Serial.printf("Free PSRAM: %u bytes\n", ESP.getFreePsram());
+  } else {
+    Serial.println("❌ PSRAM not detected!");
+  }
+  delay(5000);
+}
 
