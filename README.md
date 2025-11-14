@@ -12,6 +12,7 @@
 ![image](https://github.com/user-attachments/assets/9a707444-0985-4bda-bd50-25627ef880dc)
 
 
+<img width="1000" height="935" alt="Screenshot 2025-11-14 221447" src="https://github.com/user-attachments/assets/69e19dc1-fe99-4856-8908-0c9a3766d72c" />
 
 
 **Specification:**
