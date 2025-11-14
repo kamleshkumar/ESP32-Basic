@@ -1,0 +1,46 @@
+#include <Arduino.h>
+#include "esp_system.h"
+#include "esp_heap_caps.h"
+#if __has_include("esp_psram.h")
+  #include "esp_psram.h"
+#endif
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  Serial.println("=== ESP32-S3 Memory Report ===");
+  Serial.printf("ESP.getFlashChipSize(): %u bytes\n", (unsigned)ESP.getFlashChipSize());
+  Serial.printf("Flash MB: %u\n", (unsigned)(ESP.getFlashChipSize() / (1024UL*1024UL)));
+
+  // psramFound() is provided by the Arduino core for ESP32
+  Serial.printf("psramFound(): %d\n", psramFound() ? 1 : 0);
+
+  // If esp_psram_get_size() is available in your core this prints the PSRAM size
+  #if defined(esp_psram_get_size)
+    size_t psram_size = esp_psram_get_size();
+    Serial.printf("esp_psram_get_size(): %u bytes\n", (unsigned)psram_size);
+    Serial.printf("PSRAM MB: %u\n", (unsigned)(psram_size / (1024UL*1024UL)));
+  #else
+    Serial.println("esp_psram_get_size() not available in this core.");
+  #endif
+
+  // Get free bytes available in SPIRAM (safe, portable)
+  size_t free_spiram = heap_caps_get_free_size(MALLOC_CAP_SPIRAM);
+  Serial.printf("heap_caps_get_free_size(MALLOC_CAP_SPIRAM): %u bytes\n", (unsigned)free_spiram);
+
+  // Try allocating explicitly from PSRAM (2 MB)
+  size_t want = 2 * 1024 * 1024;
+  void *p = heap_caps_malloc(want, MALLOC_CAP_SPIRAM);
+  Serial.printf("Attempt heap_caps_malloc(%u, MALLOC_CAP_SPIRAM) -> %p\n", (unsigned)want, p);
+  if (p) {
+    Serial.println("Allocation succeeded (in PSRAM). Freeing...");
+    heap_caps_free(p);
+  } else {
+    Serial.println("Allocation failed (no/insufficient PSRAM).");
+  }
+
+  Serial.println("==============================");
+}
+
+void loop() { delay(10000); }
